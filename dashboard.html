@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 AI Job Hunter Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <style>
+:root{--bg:#070b1a;--surface:#0f1430;--surface-hover:#1a2050;--border:rgba(99,102,241,0.12);--border-hover:rgba(99,102,241,0.3);--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#6366f1;--accent-light:#818cf8;--green:#10b981;--blue:#3b82f6;--amber:#f59e0b;--red:#ef4444;--radius:14px;--radius-sm:10px;--radius-xs:6px;--shadow:0 4px 24px rgba(0,0,0,0.3);--shadow-lg:0 8px 40px rgba(0,0,0,0.5);--glow:0 0 20px rgba(99,102,241,0.15)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;background-image:radial-gradient(ellipse at 20% 50%,rgba(99,102,241,0.04) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(16,185,129,0.03) 0%,transparent 60%),radial-gradient(ellipse at 50% 80%,rgba(59,130,246,0.03) 0%,transparent 60%)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(99,102,241,0.2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:rgba(99,102,241,0.4)}
+.header{background:rgba(7,11,26,0.8);border-bottom:1px solid var(--border);padding:14px 32px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.header-inner{max-width:1440px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),#a78bfa);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(99,102,241,0.3)}
+.logo-text h1{font-family:'Outfit',sans-serif;font-size:22px;font-weight:700;background:linear-gradient(90deg,#fff,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-text p{font-size:11px;color:var(--text-muted);letter-spacing:0.02em}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 18px;font-size:12px;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:inherit;transition:all 0.2s ease;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.05),transparent);opacity:0;transition:opacity 0.2s}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:var(--border-hover)}.btn:hover::after{opacity:1}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#4f46e5);border:none;color:#fff;box-shadow:0 4px 14px rgba(99,102,241,0.3)}
+.btn-primary:hover{box-shadow:0 6px 20px rgba(99,102,241,0.4);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface-hover);color:var(--text-dim);cursor:not-allowed;box-shadow:none;transform:none}
+.btn-danger{color:var(--red);border-color:rgba(239,68,68,0.3)}
+.btn-danger:hover{border-color:var(--red);background:rgba(239,68,68,0.08)}
+.run-status-chip{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.08));border:1px solid rgba(99,102,241,0.25);padding:6px 14px;border-radius:24px;font-size:11px;color:var(--accent-light);font-weight:600}
+.pulse-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);animation:pulse 1.4s ease-in-out infinite;box-shadow:0 0 8px rgba(99,102,241,0.5)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.main{flex:1;padding:24px 32px 60px;max-width:1440px;margin:0 auto;width:100%}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;transition:all 0.25s ease;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.stat-card:nth-child(1)::before{background:linear-gradient(90deg,var(--green),#34d399)}.stat-card:nth-child(2)::before{background:linear-gradient(90deg,var(--blue),#60a5fa)}.stat-card:nth-child(3)::before{background:linear-gradient(90deg,var(--amber),#fbbf24)}.stat-card:nth-child(4)::before{background:linear-gradient(90deg,var(--accent),#a78bfa)}
+.stat-card:hover{transform:translateY(-2px);border-color:var(--border-hover);box-shadow:var(--shadow)}
+.stat-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;font-weight:700}
+.stat-value{font-family:'Outfit',sans-serif;font-size:32px;font-weight:700;letter-spacing:-0.02em}
+.stat-value.green{color:var(--green)}.stat-value.blue{color:var(--blue)}.stat-value.amber{color:var(--amber)}.stat-value.accent{color:var(--accent-light)}
+
+/* Progress bar */
+.progress-section{background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(139,92,246,0.03));border:1px solid rgba(99,102,241,0.15);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;display:none;transition:all 0.3s ease}
+.progress-section.visible{display:block}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.progress-title{font-size:13px;font-weight:700;color:var(--accent-light);display:flex;align-items:center;gap:8px}
+.progress-title .spinner-small{width:14px;height:14px;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block}
+.progress-percent{font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text)}
+.progress-track{width:100%;height:8px;background:rgba(99,102,241,0.1);border-radius:8px;overflow:hidden;position:relative}
+.progress-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--accent),#a78bfa);transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);position:relative;width:0%}
+.progress-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.progress-message{font-size:11px;color:var(--text-muted);margin-top:8px;display:flex;align-items:center;gap:6px}
+.progress-step-dots{display:flex;gap:6px;align-items:center;margin-left:auto}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.3s}
+.step-dot.active{background:var(--accent);box-shadow:0 0 8px rgba(99,102,241,0.5)}
+.step-dot.done{background:var(--green);box-shadow:0 0 8px rgba(16,185,129,0.4)}
+
+/* Filter bar */
+.filter-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.filter-bar input{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 16px 10px 38px;border-radius:24px;font-size:13px;outline:none;font-family:inherit;transition:all 0.2s}
+.filter-bar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,0.12)}
+.filter-bar .search-wrapper{position:relative;flex:1;min-width:200px}
+.filter-bar .search-wrapper .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-dim);pointer-events:none}
+.filter-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-btn-group{display:flex;gap:4px;background:rgba(15,20,48,0.5);border:1px solid var(--border);border-radius:24px;padding:3px}
+.pill-btn{padding:6px 14px;border-radius:20px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:11px;font-weight:600;font-family:inherit;transition:all 0.2s}
+.pill-btn:hover{color:var(--text)}
+.pill-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(99,102,241,0.3)}
+.form-select{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:20px;font-size:12px;font-family:inherit;outline:none;cursor:pointer;transition:border-color 0.2s}
+.form-select:focus{border-color:var(--accent)}
+#batchActionBar{display:flex;align-items:center;gap:10px;background:rgba(99,102,241,0.04);border:1px solid var(--border);padding:6px 14px;border-radius:20px}
+
+/* Jobs grid */
+.jobs-grid{display:flex;flex-direction:column;gap:12px}
+.job-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all 0.25s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
+.job-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--accent),var(--accent-light));opacity:0;transition:opacity 0.3s}
+.job-card:hover{transform:translateY(-2px);border-color:var(--border-hover);box-shadow:var(--shadow-lg)}
+.job-card:hover::before{opacity:1}
+.card-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.card-header-left{display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0}
+.card-title{font-size:15px;font-weight:600;line-height:1.4}
+.card-title a{color:var(--text);text-decoration:none;transition:color 0.2s}
+.card-title a:hover{color:var(--accent-light)}
+.card-company{font-size:13px;color:var(--text-muted);margin-top:4px;font-weight:500}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.card-tag{font-size:10px;padding:4px 12px;border-radius:12px;background:rgba(99,102,241,0.06);color:var(--text-muted);font-weight:600;border:1px solid rgba(99,102,241,0.1)}
+.card-tag.platform{background:rgba(16,185,129,0.08);color:var(--green);border-color:rgba(16,185,129,0.15)}
+.card-tag.location{background:rgba(59,130,246,0.08);color:var(--blue);border-color:rgba(59,130,246,0.15)}
+.card-tag.date{background:rgba(99,102,241,0.06);color:var(--text-dim);border-color:rgba(99,102,241,0.08)}
+.card-tag.salary{background:rgba(245,158,11,0.08);color:var(--amber);border-color:rgba(245,158,11,0.15)}
+.card-tag.kl-transfer{background:rgba(168,85,247,0.1);color:#c084fc;border-color:rgba(168,85,247,0.25)}
+.card-tag.age{background:rgba(148,163,184,0.08);color:var(--text-dim);border-color:rgba(148,163,184,0.15)}
+.card-tag.age.stale{background:rgba(239,68,68,0.1);color:var(--red);border-color:rgba(239,68,68,0.25)}
+.card-ai-reason{font-size:12px;color:var(--text-dim);margin-top:10px;line-height:1.5;background:linear-gradient(135deg,rgba(99,102,241,0.04),transparent);border-left:3px solid rgba(99,102,241,0.3);padding:10px 14px;border-radius:0 var(--radius-xs) var(--radius-xs) 0}
+.card-footer-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid rgba(99,102,241,0.06)}
+.score-circle{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;transition:all 0.3s}
+.score-circle.excellent{background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05));color:var(--green);border:2px solid rgba(16,185,129,0.4);box-shadow:0 0 16px rgba(16,185,129,0.15)}
+.score-circle.good{background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(59,130,246,0.05));color:var(--blue);border:2px solid rgba(59,130,246,0.4);box-shadow:0 0 16px rgba(59,130,246,0.15)}
+.score-circle.moderate{background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));color:var(--amber);border:2px solid rgba(245,158,11,0.4);box-shadow:0 0 16px rgba(245,158,11,0.15)}
+.score-circle.low{background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(239,68,68,0.03));color:var(--red);border:2px solid rgba(239,68,68,0.2)}
+.risk-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;cursor:help;border:1px solid transparent}
+.risk-badge.high{background:rgba(239,68,68,0.15);color:#ef4444;border-color:rgba(239,68,68,0.4)}
+.risk-badge.medium{background:rgba(245,158,11,0.15);color:#f59e0b;border-color:rgba(245,158,11,0.4)}
+.risk-badge.low{background:rgba(34,197,94,0.12);color:#22c55e;border-color:rgba(34,197,94,0.35)}
+.delete-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:15px;padding:6px 8px;border-radius:var(--radius-xs);transition:all 0.2s}
+.delete-btn:hover{color:var(--red);background:rgba(239,68,68,0.08)}
+.apply-btn{padding:8px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;text-decoration:none;background:linear-gradient(135deg,var(--accent),#4f46e5);color:#fff;display:inline-block;transition:all 0.2s;box-shadow:0 2px 8px rgba(99,102,241,0.2)}
+.apply-btn:hover{box-shadow:0 4px 14px rgba(99,102,241,0.35);transform:translateY(-1px)}
+.apply-btn-outline{background:transparent;color:var(--accent);border:1px dashed rgba(99,102,241,0.3);box-shadow:none}
+.apply-btn-outline:hover{background:rgba(99,102,241,0.06);border-color:var(--accent);box-shadow:none}
+.no-results-pane{text-align:center;padding:80px 20px;background:var(--surface);border-radius:var(--radius);border:1px dashed var(--border)}
+.no-results-pane p:first-child{font-size:48px;margin-bottom:12px}
+.no-results-pane h3{font-size:18px;font-weight:600;margin-bottom:6px}
+.no-results-pane p{font-size:13px;color:var(--text-muted)}
+
+/* Toast notifications */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;min-width:300px;max-width:420px;backdrop-filter:blur(16px);transform:translateX(120%);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.toast.show{transform:translateX(0);opacity:1}
+.toast-icon{font-size:20px;flex-shrink:0}
+.toast-body{flex:1}
+.toast-title{font-size:13px;font-weight:700}
+.toast-msg{font-size:11px;color:var(--text-muted);margin-top:2px}
+.toast.success .toast-title{color:var(--green)}.toast.error .toast-title{color:var(--red)}.toast.info .toast-title{color:var(--accent-light)}
+
+/* Drawer */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:998;opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(4px)}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.settings-drawer{position:fixed;top:0;right:-460px;width:440px;height:100vh;background:var(--surface);border-left:1px solid var(--border);z-index:999;transition:right 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;max-width:100vw;box-shadow:-10px 0 40px rgba(0,0,0,0.5)}
+.settings-drawer.open{right:0}
+.drawer-header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border)}
+.drawer-header h2{font-size:18px;font-family:'Outfit',sans-serif;font-weight:600}
+.close-btn{background:none;border:none;color:var(--text);font-size:26px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-xs);transition:all 0.2s}
+.close-btn:hover{background:rgba(255,255,255,0.06)}
+.drawer-body{flex:1;overflow-y:auto;padding:20px 24px}
+.drawer-body hr{border:0;border-top:1px solid var(--border);margin:12px 0}
+.drawer-footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;background:rgba(15,20,48,0.4)}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+.form-input,.form-textarea{width:100%;background:rgba(7,11,26,0.5);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:var(--radius-sm);font-size:13px;outline:none;font-family:inherit;transition:all 0.2s}
+.form-textarea{min-height:70px;resize:vertical}
+.form-input:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,0.1)}
+.switch-group{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:10px 12px;background:rgba(7,11,26,0.3);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.switch-title{font-size:13px;font-weight:600}.switch-desc{font-size:10px;color:var(--text-dim);margin-top:2px}
+.switch{position:relative;width:42px;height:24px;display:inline-block;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,0.08);border-radius:24px;transition:0.25s}
+.slider:before{content:"";position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:var(--text-muted);border-radius:50%;transition:0.25s}
+.switch input:checked+.slider{background:var(--accent);box-shadow:0 0 12px rgba(99,102,241,0.3)}
+.switch input:checked+.slider:before{transform:translateX(18px);background:#fff}
+
+/* Modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(6px);opacity:0;transition:opacity 0.25s}
+.modal.open{display:flex;opacity:1}
+.modal-content{background:var(--surface);border-radius:var(--radius);width:90%;max-width:620px;max-height:82vh;display:flex;flex-direction:column;border:1px solid var(--border);box-shadow:var(--shadow-lg);transform:scale(0.95);transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1)}
+.modal.open .modal-content{transform:scale(1)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border)}
+.modal-header h3{font-size:17px;font-family:'Outfit',sans-serif;font-weight:600}
+.modal-body{flex:1;padding:20px 24px;overflow-y:auto}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 24px;border-top:1px solid var(--border);background:rgba(15,20,48,0.3)}
+#coverLetterText{width:100%;height:350px;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(7,11,26,0.5);color:var(--text);font-family:inherit;font-size:13px;line-height:1.6;resize:none;outline:none}
+.loading-pane{text-align:center;padding:80px 20px;color:var(--text-dim)}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.beginner-banner{background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(16,185,129,0.10));border:1px solid rgba(99,102,241,0.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;font-size:13px;line-height:1.6;color:var(--text)}
+.beginner-banner h3{margin:0 0 6px;font-size:15px;color:var(--accent)}
+.beginner-banner .bb-counts{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.beginner-banner .bb-chip{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px 12px;font-size:12px;font-weight:700}
+.fit-tag{font-size:10px;font-weight:800;padding:3px 9px;border-radius:10px;margin-left:6px;vertical-align:middle}
+.fit-safe{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)}
+.fit-stretch{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3)}
+.fit-unknown{background:rgba(148,163,184,0.15);color:#94a3b8;border:1px solid rgba(148,163,184,0.3)}
+.fit-label{font-size:11px;color:var(--text-dim);font-weight:700}
+.status-select{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:var(--radius-xs);font-size:11px;font-weight:600;font-family:inherit;outline:none;cursor:pointer;max-width:110px}
+.status-select:focus{border-color:var(--accent)}
+.status-select.st-new{border-color:rgba(148,163,184,0.3);color:var(--text-muted)}
+.status-select.st-saved{border-color:rgba(245,158,11,0.4);color:#fbbf24}
+.status-select.st-applied{border-color:rgba(59,130,246,0.4);color:#60a5fa}
+.status-select.st-interviewing{border-color:rgba(168,85,247,0.4);color:#c084fc}
+.status-select.st-offered{border-color:rgba(16,185,129,0.4);color:#34d399}
+.status-select.st-rejected{border-color:rgba(239,68,68,0.4);color:#f87171}
+@media(max-width:768px){.header{padding:12px 16px}.main{padding:16px}.stats-row{grid-template-columns:repeat(2,1fr)}.filter-bar{flex-direction:column}.filter-bar .search-wrapper{width:100%}.filter-actions{width:100%}.settings-drawer{width:100%;right:-100%}.toast-container{left:16px;right:16px;bottom:16px}.toast{min-width:auto}}
+</style>
+<body>
+    <div class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">🎯</div>
+                <div class="logo-text">
+                    <h1>AI Job Hunter</h1>
+                    <p>AI-Powered Job Analysis & Matching</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="run-status-chip" id="runningIndicator" style="display: none;">
+                    <div class="pulse-dot"></div>
+                    <span id="runningText">Running search...</span>
+                </div>
+                <button class="btn" id="resetStatusBtn" style="display:none; color: var(--amber); border-color: var(--amber);" title="Force-reset if scraper appears stuck">⚠️ Force Reset</button>
+                <button class="btn" id="clearAllBtn" style="color: var(--red); border-color: var(--red);" title="Delete all job records">🗑️ Clear All</button>
+                <button class="btn" id="openSettingsBtn">⚙️ Settings</button>
+                <button class="btn btn-primary" id="runNowBtn">🚀 开始找适合我的工作</button>
+                <button class="btn" id="resumeScanBtn" title="Generate search keywords from your resume">📋 从简历生成搜索词</button>
+                <button class="btn" id="browserAgentBtn" title="Auto-search job portals with browser + AI vision">🤖 Auto Browse</button>
+                <span id="browserStatus" style="display:none; font-size:11px; color:var(--green); align-items:center; gap:6px;"><span class="pulse-dot" style="background:var(--green);box-shadow:0 0 8px rgba(16,185,129,0.5);"></span> Browsing...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats summary dashboard panel -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-label">🏆 Excellent Matches</div>
+            <div class="stat-value green" id="statExcellent">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">✅ Good Matches</div>
+            <div class="stat-value blue" id="statGood">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">⚠️ Moderate</div>
+            <div class="stat-value amber" id="statModerate">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">📋 Total Checked</div>
+            <div class="stat-value accent" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">🚩 Flagged Risk</div>
+            <div class="stat-value red" id="statRisk">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">📨 Applied / In Progress</div>
+            <div class="stat-value blue" id="statApplied">0</div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-section" id="progressSection">
+        <div class="progress-header">
+            <div class="progress-title">
+                <div class="spinner-small"></div>
+                <span id="progressTitle">Processing...</span>
+            </div>
+            <span class="progress-percent" id="progressPercent">0%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div class="progress-message">
+            <span id="progressMessage">Initializing...</span>
+            <div class="progress-step-dots">
+                <span class="step-dot" data-step="scrape"></span>
+                <span class="step-dot" data-step="fetch"></span>
+                <span class="step-dot" data-step="evaluate"></span>
+                <span class="step-dot" data-step="cover"></span>
+                <span class="step-dot" data-step="done"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtering Bar -->
+    <div class="filter-bar">
+        <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search title, company, location...">
+        </div>
+        <div class="filter-actions">
+            <div id="batchActionBar">
+                <label style="display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; cursor: pointer; user-select: none; color: var(--text-muted);">
+                    <input type="checkbox" id="selectAllCheckbox" style="accent-color: var(--accent); cursor: pointer;">
+                    Select All
+                </label>
+                <span style="font-size: 11px; color: var(--text-dim); margin: 0 4px;">|</span>
+                <button id="deleteSelectedBtn" style="background: none; border: 1px solid var(--border); color: var(--text-dim); padding: 4px 12px; border-radius: 12px; cursor: not-allowed; font-size: 11px; font-weight: 700; font-family: inherit;" disabled>🗑️ Delete (0)</button>
+            </div>
+            <label style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;cursor:pointer;color:var(--accent);user-select:none;background:rgba(99,102,241,0.08);padding:5px 12px;border-radius:12px;border:1px solid rgba(99,102,241,0.2);">
+                <input type="checkbox" id="beginnerModeCheckbox" checked style="accent-color:var(--accent);cursor:pointer;">
+                🧑‍💻 新手模式
+            </label>
+            <div class="filter-btn-group" id="platformFilters">
+                <button class="pill-btn active" data-platform="all">All</button>
+                <button class="pill-btn" data-platform="indeed">Indeed</button>
+                <button class="pill-btn" data-platform="jobstreet">JobStreet</button>
+                <button class="pill-btn" data-platform="linkedin">LinkedIn</button>
+            </div>
+            <div class="filter-btn-group" id="scoreFilters">
+                <button class="pill-btn active" data-score="all">All</button>
+                <button class="pill-btn" data-score="90">90+</button>
+                <button class="pill-btn" data-score="80">80+</button>
+                <button class="pill-btn" data-score="50">50+</button>
+            </div>
+            <div class="filter-btn-group" id="extraFilters">
+                <button class="pill-btn" data-extra="penang">📍 Penang</button>
+                <button class="pill-btn" data-extra="kltransfer">🔄 可调KL</button>
+                <button class="pill-btn" data-extra="safe">💪 只看稳妥</button>
+            </div>
+            <div class="filter-btn-group" id="statusFilters">
+                <button class="pill-btn active" data-status="all">状态</button>
+                <button class="pill-btn" data-status="new" title="未处理">🆕</button>
+                <button class="pill-btn" data-status="saved" title="已收藏">⭐</button>
+                <button class="pill-btn" data-status="applied" title="已投递">📨</button>
+                <button class="pill-btn" data-status="interviewing" title="面试中">💬</button>
+                <button class="pill-btn" data-status="offered" title="拿到Offer">🎉</button>
+                <button class="pill-btn" data-status="rejected" title="已拒绝">❌</button>
+            </div>
+            <input type="number" id="minSalaryFilter" min="0" step="100" placeholder="Min RM" class="form-input" style="width:92px;height:32px;padding:0 10px;font-size:12px;">
+            <label style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-muted);user-select:none;">
+                <input type="checkbox" id="hideOldCheckbox" checked style="accent-color:var(--accent);cursor:pointer;">
+                隐藏超过
+                <input type="number" id="maxAgeFilter" min="0" step="1" value="30" style="width:52px;height:28px;padding:0 6px;font-size:12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);">
+                天
+            </label>
+            <select class="form-select" id="sortSelect">
+                <option value="fit-safe">适合度(稳妥优先)</option>
+                <option value="score-desc">Score ↓</option>
+                <option value="score-asc">Score ↑</option>
+                <option value="salary-desc">Salary ↓</option>
+                <option value="date-desc">Newest</option>
+                <option value="age-asc">Newest posted</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Beginner-mode curated banner -->
+    <div id="beginnerBanner" class="beginner-banner" style="display:none;"></div>
+
+    <!-- Main listings grid -->
+    <div class="jobs-grid" id="jobsGrid">
+        <div class="loading-pane">
+            <div class="loading-spinner"></div>
+            <p>Loading jobs database...</p>
+        </div>
+    </div>
+
+    <!-- Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Slide-out Settings Drawer -->
+    <div class="settings-drawer" id="settingsDrawer">
+        <div class="drawer-header">
+            <h2>⚙️ Config Preferences</h2>
+            <button class="close-btn" id="closeSettingsBtn">&times;</button>
+        </div>
+        <div class="drawer-body">
+            <div class="form-group">
+                <label class="form-label">Upload Resume (PDF/DOC/MD/TXT)</label>
+                <div id="resumeDropZone" style="border:2px dashed var(--border);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(99,102,241,0.03);">
+                    <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.md,.txt" style="display:none;" onchange="handleResumeUpload(this)">
+                    <p style="font-size:24px;margin-bottom:6px;">📄</p>
+                    <p style="font-size:12px;color:var(--text-muted);margin:0;">Click or drag to upload resume</p>
+                    <p id="resumeFileName" style="font-size:11px;color:var(--green);margin-top:6px;display:none;"></p>
+                </div>
+            </div>
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;"/>
+            <div class="form-group">
+                <label class="form-label">Search Keywords</label>
+                <input type="text" class="form-input" id="cfgKeywords" placeholder="Comma separated, e.g. Data Analyst, Python">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Preferred Locations</label>
+                <input type="text" class="form-input" id="cfgLocations" placeholder="Comma separated, e.g. Singapore, Remote, KL">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Custom Requirements</label>
+                <textarea class="form-textarea" id="cfgRequirements" placeholder="E.g. MNC preferred, branches in both KL and Penang"></textarea>
+                <div id="prefPreview" style="display:none;font-size:11px;color:var(--text-dim);background:var(--bg-elevated);padding:8px 10px;border-radius:8px;margin-top:6px;line-height:1.5;"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Match Threshold (Score >=)</label>
+                <input type="number" class="form-input" id="cfgThreshold" min="0" max="100" value="80">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Minimum Monthly Salary (RM)</label>
+                <input type="number" class="form-input" id="cfgMinSalary" min="0" step="100" value="0" placeholder="0 = no minimum">
+                <span style="font-size:11px;color:var(--text-dim);">Jobs with a known salary below this are deprioritized. Leave 0 to disable.</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Max Job Age (days)</label>
+                <input type="number" class="form-input" id="cfgMaxAge" min="0" step="1" value="30" placeholder="0 = no limit">
+                <span style="font-size:11px;color:var(--text-dim);">Jobs posted more than this many days ago are hidden/deprioritized. Leave 0 to disable.</span>
+            </div>
+            <div class="form-group">
+                <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                    <input type="checkbox" id="cfgSafeFirst" checked style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer;">
+                    新手优先：把"稳妥岗"排前面 (Beginner-friendly)
+                </label>
+                <span style="font-size:11px;color:var(--text-dim);">开启后，AI 会给"你现有技能就能直接上手"的稳妥岗加分并优先展示，鼓励你先投这些。</span>
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;"/>
+            
+            <div class="form-group">
+                <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                    <input type="checkbox" id="cfgUseAI" style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer;">
+                    使用 AI 评估（需配置 API Key）
+                </label>
+                <span style="font-size:11px;color:var(--text-dim);">关闭时完全无需 AI：直接用简历（技能/学历/经验/地点/语义）做规则匹配，照样找到适合你简历的工作。</span>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;"/>
+            
+            <div class="form-group">
+                <label class="form-label">Job Platforms</label>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="cfgPlatformIndeed" checked>
+                        <span>Indeed</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="cfgPlatformLinkedin" checked>
+                        <span>LinkedIn</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="cfgPlatformJobstreet" checked>
+                        <span>JobStreet</span>
+                    </label>
+                </div>
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;"/>
+            
+            <div class="switch-group">
+                <div class="switch-label">
+                    <span class="switch-title">Email Notifications</span>
+                    <span class="switch-desc">Receive matched job alerts by email</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="cfgEmailEnabled">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">SMTP Sender Email</label>
+                <input type="email" class="form-input" id="cfgEmailSender" placeholder="your_email@gmail.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">SMTP App Password</label>
+                <input type="password" class="form-input" id="cfgEmailPassword" placeholder="App-specific password">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Receiver Email</label>
+                <input type="email" class="form-input" id="cfgEmailReceiver" placeholder="destination@email.com">
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;"/>
+            
+            <div class="switch-group">
+                <div class="switch-label">
+                    <span class="switch-title">Telegram Notifications</span>
+                    <span class="switch-desc">Receive matched job alerts by Telegram</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="cfgTelegramEnabled">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Telegram Bot Token</label>
+                <input type="password" class="form-input" id="cfgTelegramBotToken" placeholder="bot123456:ABC-DEF...">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Telegram Chat ID</label>
+                <input type="text" class="form-input" id="cfgTelegramChatId" placeholder="e.g. 123456789 or @channel">
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 8px 0;"/>
+            
+            <div class="switch-group">
+                <div class="switch-label">
+                    <span class="switch-title">⏰ 定时自动搜索</span>
+                    <span class="switch-desc">每隔 N 小时自动抓取并评估新职位，无需手动点开始</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="cfgSchedulerEnabled">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="form-label">运行间隔（小时）</label>
+                <input type="number" class="form-input" id="cfgSchedulerInterval" min="1" step="1" value="6">
+                <span style="font-size:11px;color:var(--text-dim);">下次自动运行：<span id="schedulerNextRun">未启用</span></span>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <button class="btn" id="cancelSettingsBtn">Cancel</button>
+            <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+        </div>
+    </div>
+
+    <!-- Cover Letter Modal -->
+    <div class="modal" id="coverLetterModal" onclick="if(event.target === this) closeCoverLetterModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✉️ Tailored Cover Letter</h3>
+                <button class="close-btn" onclick="closeCoverLetterModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="clModalJobInfo" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; font-family: 'Outfit', sans-serif;"></p>
+                <textarea id="coverLetterText" readonly style="width: 100%; height: 350px; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(7, 9, 19, 0.6); color: var(--text); font-family: inherit; font-size: 13px; line-height: 1.5; resize: none; outline: none;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeCoverLetterModal()">Close</button>
+                <button class="btn btn-primary" id="copyClBtn" onclick="copyCoverLetter()">📋 Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Beginner onboarding modal -->
+    <div class="modal" id="onboardingModal" style="align-items:center;justify-content:center;">
+        <div class="modal-content" style="max-width:520px;">
+            <div class="modal-header">
+                <h3>🧑‍💻 欢迎！别担心，我们一步步来</h3>
+                <button class="close-btn" onclick="closeOnboarding()">&times;</button>
+            </div>
+            <div class="modal-body" style="font-size:14px;line-height:1.7;">
+                <p>这个工具会帮你把网上海量招聘，筛成<strong>真正适合你</strong>的短名单。你不用懂技术，照着下面三步走就行：</p>
+                <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:14px 16px;">
+                    <p style="margin:0 0 8px;"><b>① 上传简历</b><br><span style="font-size:13px;color:var(--text-muted);">点"📤 Upload Resume"上传你的简历（.md/.pdf/.docx），系统会自动提取技能和关键词。</span></p>
+                    <p style="margin:0 0 8px;"><b>② 点"🚀 开始找适合我的工作"</b><br><span style="font-size:13px;color:var(--text-muted);">它会自动去 Indeed / LinkedIn 搜、再用规则打分筛选，大概几分钟。你可以去喝口水 😊</span></p>
+                    <p style="margin:0;"><b>③ 看"稳妥岗"，挑着投</b><br><span style="font-size:13px;color:var(--text-muted);">列表已按"你现有技能就能上手"的稳妥岗排序，每份都有大白话解释。觉得合适就点 <b>View →</b> 去投。需要时还能一键生成 Cover Letter。</span></p>
+                </div>
+                <p style="font-size:13px;color:var(--text-dim);margin-top:12px;">🚩 高风险/可疑公司会被标红，先别投。薪资、地点、是否可转KL 都帮你标好了。慢慢来，你比自己想的更强 💪</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeOnboarding()">明白啦，开始吧 →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allJobs = [];
+        let activeFilters = { platform: 'all', score: 'all', search: '', extra: 'all', status: 'all', minSalary: 0, hideOld: true, maxAge: 30 };
+        let settingsData = {};
+
+        // --- Dashboard access token interceptor ---
+        // If the server requires a token, the browser asks for it once,
+        // stores it, and attaches it to every API request.
+        const _origFetch = window.fetch;
+        let authPromptOpen = false;
+        window.fetch = async function (input, init) {
+            const req = input instanceof Request ? input : new Request(input, init);
+            const headers = new Headers(req.headers);
+            const token = localStorage.getItem('dash_token');
+            if (token) headers.set('X-Auth-Token', token);
+            const res = await _origFetch.call(this, req, { ...init, headers });
+            if (res.status === 401 && !authPromptOpen) {
+                authPromptOpen = true;
+                const entered = window.prompt('🔒 请输入 Dashboard 访问密码 (DASHBOARD_TOKEN)：');
+                authPromptOpen = false;
+                if (entered) {
+                    localStorage.setItem('dash_token', entered);
+                    window.location.reload();
+                }
+            }
+            return res;
+        };
+
+        // --- HTML escaping for untrusted job data (XSS protection) ---
+        function esc(s) {
+            if (s === null || s === undefined) return '';
+            return String(s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        const STATUS_MAP = {
+            new: '🆕 未处理', saved: '⭐ 已收藏', applied: '📨 已投递',
+            interviewing: '💬 面试中', offered: '🎉 拿到Offer', rejected: '❌ 已拒绝'
+        };
+        function statusOptionsHtml(current) {
+            const cur = current || 'new';
+            return Object.keys(STATUS_MAP).map(k =>
+                `<option value="${k}" ${k === cur ? 'selected' : ''}>${STATUS_MAP[k]}</option>`
+            ).join('');
+        }
+
+        // --- Toast System ---
+        function showToast(type, title, msg, duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<div class="toast-icon">${icons[type] || 'ℹ️'}</div><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-msg">${msg}</div></div>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('show'));
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, duration);
+        }
+
+        // --- Progress Bar ---
+        function updateProgress(progress) {
+            const section = document.getElementById('progressSection');
+            if (!progress || !progress.step) { section.classList.remove('visible'); return; }
+            section.classList.add('visible');
+            const pct = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
+            document.getElementById('progressFill').style.width = Math.min(pct, 100) + '%';
+            document.getElementById('progressPercent').textContent = pct + '%';
+            document.getElementById('progressMessage').textContent = progress.message || '';
+            const stepMap = { 'jd_fetch': 'fetch', 'ai_evaluation': 'evaluate', 'cover_letters': 'cover' };
+            const dotStep = stepMap[progress.step] || progress.step;
+            document.querySelectorAll('.step-dot').forEach(d => {
+                const s = d.dataset.step;
+                const order = ['scrape', 'fetch', 'evaluate', 'cover', 'done'];
+                const currentIdx = order.indexOf(dotStep);
+                const thisIdx = order.indexOf(s);
+                d.className = 'step-dot';
+                if (thisIdx < currentIdx || (s === 'done' && dotStep === 'done')) d.classList.add('done');
+                else if (thisIdx === currentIdx) d.classList.add('active');
+            });
+        }
+
+        function hideProgress() {
+            document.getElementById('progressSection').classList.remove('visible');
+        }
+
+        // --- API ---
+        async function fetchJobs() {
+            try {
+                const res = await fetch('/api/jobs');
+                if (!res.ok) throw new Error("API error");
+                allJobs = await res.json();
+                if (document.getElementById('beginnerModeCheckbox').checked) {
+                    document.getElementById('sortSelect').value = 'fit-safe';
+                }
+                allJobs.sort((a,b) => (b.score || 0) - (a.score||0));
+                updateStats();
+                renderBeginnerBanner();
+                renderJobsGrid();
+            } catch (err) {
+                console.error("Error loading jobs:", err);
+                document.getElementById('jobsGrid').innerHTML = `<div class="no-results-pane"><p>📭</p><h3>No job database found</h3><p>Server offline or not yet scanned. Run the scraper to generate fresh listings.</p></div>`;
+            }
+        }
+
+        async function fetchSettings() {
+            try {
+                const res = await fetch('/api/settings');
+                if (!res.ok) throw new Error("API error");
+                settingsData = await res.json();
+                document.getElementById('cfgKeywords').value = (settingsData.search.keywords || []).join(', ');
+                document.getElementById('cfgLocations').value = (settingsData.search.locations || []).join(', ');
+                document.getElementById('cfgRequirements').value = settingsData.preferences.custom_requirements || '';
+                document.getElementById('cfgThreshold').value = settingsData.preferences.match_threshold || 80;
+                document.getElementById('cfgMinSalary').value = settingsData.preferences.min_salary || 0;
+                document.getElementById('cfgMaxAge').value = settingsData.preferences.max_age_days || 30;
+                document.getElementById('cfgSafeFirst').checked = settingsData.preferences.safe_first !== false;
+                document.getElementById('cfgUseAI').checked = settingsData.preferences.use_ai === true;
+                document.getElementById('maxAgeFilter').value = settingsData.preferences.max_age_days || 30;
+                activeFilters.maxAge = settingsData.preferences.max_age_days || 30;
+                const platforms = settingsData.search.platforms || { indeed: true, linkedin: true, jobstreet: true };
+                document.getElementById('cfgPlatformIndeed').checked = platforms.indeed !== false;
+                document.getElementById('cfgPlatformLinkedin').checked = platforms.linkedin !== false;
+                document.getElementById('cfgPlatformJobstreet').checked = platforms.jobstreet !== false;
+                document.getElementById('cfgEmailEnabled').checked = settingsData.notifications.email_enabled || false;
+                document.getElementById('cfgEmailSender').value = settingsData.notifications.email_sender || '';
+                document.getElementById('cfgEmailPassword').value = settingsData.notifications.email_password || '';
+                document.getElementById('cfgEmailReceiver').value = settingsData.notifications.email_receiver || '';
+                document.getElementById('cfgTelegramEnabled').checked = settingsData.notifications.telegram_enabled || false;
+                document.getElementById('cfgTelegramBotToken').value = settingsData.notifications.telegram_bot_token || '';
+                document.getElementById('cfgTelegramChatId').value = settingsData.notifications.telegram_chat_id || '';
+                const sched = settingsData.scheduler || {};
+                document.getElementById('cfgSchedulerEnabled').checked = !!sched.enabled;
+                document.getElementById('cfgSchedulerInterval').value = sched.interval_hours || 6;
+                updateSchedulerNextRun(sched);
+                renderPreferencePreview();
+            } catch (err) {
+                console.error("Error loading settings:", err);
+            }
+            try {
+                const rin = await fetch('/api/resume/info');
+                if (rin.ok) {
+                    const rf = await rin.json();
+                    if (rf.has_resume && rf.filename) {
+                        document.getElementById('resumeFileName').textContent = rf.filename;
+                        document.getElementById('resumeFileName').style.display = 'block';
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading resume info:", err);
+            }
+        }
+
+        function updateSchedulerNextRun(sched) {
+            const el = document.getElementById('schedulerNextRun');
+            if (!sched) sched = {};
+            if (sched.enabled && sched.next_run_at) {
+                const d = new Date(Number(sched.next_run_at) * 1000);
+                if (!isNaN(d.getTime())) {
+                    el.textContent = d.toLocaleString('zh-CN', { hour12: false });
+                    return;
+                }
+            }
+            el.textContent = sched.enabled ? '等待首次运行' : '未启用';
+        }
+
+        // Show what the requirement text parses into, so changing it has a
+        // visible effect before any run.
+        async function renderPreferencePreview() {
+            const el = document.getElementById('prefPreview');
+            if (!el) return;
+            try {
+                const res = await fetch('/api/preferences/preview');
+                if (!res.ok) { el.style.display = 'none'; return; }
+                const data = await res.json();
+                if (!data.success || !data.profile) { el.style.display = 'none'; return; }
+                const p = data.profile;
+                const D = { penang: 'Penang', kuala_lumpur: 'KL', singapore: 'SG', johor: 'Johor', selangor: 'Selangor' };
+                const L = ks => (ks || []).map(k => D[k] || k).join('/');
+                const parts = [];
+                if (p.base_locations && p.base_locations.length) parts.push('基地: ' + L(p.base_locations) + '(不在基地压至62分)');
+                if (p.excluded_locations && p.excluded_locations.length) parts.push('排除: ' + L(p.excluded_locations));
+                if (p.relocation && p.relocation.targets.length) parts.push('调往' + L(p.relocation.targets) + ' 权重' + p.relocation.weight);
+                const ct = p.company_type || {};
+                if (ct.mnc) parts.push('要MNC 权重' + ct.mnc);
+                const wm = p.work_mode || {};
+                if (wm.remote) parts.push('要远程(权重' + wm.remote + ')');
+                if (wm.onsite) parts.push('要坐班(权重' + wm.onsite + ')');
+                const inds = Object.keys(p.industries || {});
+                if (inds.length) parts.push('行业: ' + inds.join('/'));
+                parts.push('未写明薪资扣分权重 ' + p.salary_transparency);
+                el.textContent = '系统理解 → ' + parts.join('；');
+                el.style.display = 'block';
+            } catch (e) { el.style.display = 'none'; }
+        }
+
+        async function saveSettings() {
+            const keywords = document.getElementById('cfgKeywords').value.split(',').map(s => s.trim()).filter(Boolean);
+            const locations = document.getElementById('cfgLocations').value.split(',').map(s => s.trim()).filter(Boolean);
+            const updated = {
+                search: { keywords, locations, platforms: {
+                    indeed: document.getElementById('cfgPlatformIndeed').checked,
+                    linkedin: document.getElementById('cfgPlatformLinkedin').checked,
+                    jobstreet: document.getElementById('cfgPlatformJobstreet').checked
+                }},
+                preferences: {
+                    match_threshold: parseInt(document.getElementById('cfgThreshold').value) || 80,
+                    min_salary: parseInt(document.getElementById('cfgMinSalary').value) || 0,
+                    max_age_days: parseInt(document.getElementById('cfgMaxAge').value) || 30,
+                    safe_first: document.getElementById('cfgSafeFirst').checked,
+                    use_ai: document.getElementById('cfgUseAI').checked,
+                    company_type: '',
+                    custom_requirements: document.getElementById('cfgRequirements').value.trim()
+                },
+                notifications: {
+                    email_enabled: document.getElementById('cfgEmailEnabled').checked,
+                    email_sender: document.getElementById('cfgEmailSender').value.trim(),
+                    email_password: document.getElementById('cfgEmailPassword').value.trim(),
+                    email_receiver: document.getElementById('cfgEmailReceiver').value.trim(),
+                    telegram_enabled: document.getElementById('cfgTelegramEnabled').checked,
+                    telegram_bot_token: document.getElementById('cfgTelegramBotToken').value.trim(),
+                    telegram_chat_id: document.getElementById('cfgTelegramChatId').value.trim()
+                },
+                scheduler: {
+                    enabled: document.getElementById('cfgSchedulerEnabled').checked,
+                    interval_hours: parseInt(document.getElementById('cfgSchedulerInterval').value) || 6
+                }
+            };
+            try {
+                const res = await fetch('/api/settings', { method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updated)
+                });
+                if (!res.ok) throw new Error("API Save Error");
+                showToast('success', 'Settings Saved', 'Configuration updated successfully.');
+                toggleDrawer(false);
+                fetchSettings();
+            } catch (err) {
+                showToast('error', 'Save Failed', err.message);
+            }
+        }
+
+        async function triggerScraper() {
+            try {
+                const indicator = document.getElementById('runningIndicator');
+                const runBtn = document.getElementById('runNowBtn');
+                indicator.style.display = 'flex';
+                document.getElementById('runningText').textContent = "Starting...";
+                runBtn.disabled = true;
+                runBtn.textContent = "Scanning...";
+                showToast('info', 'Search Started', 'Scraping job platforms and evaluating matches...', 3000);
+                const res = await fetch('/api/run', { method: 'POST' });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || "Failed to trigger run");
+                setTimeout(checkStatus, 500);
+            } catch (err) {
+                showToast('error', 'Trigger Error', err.message);
+                checkStatus();
+            }
+        }
+
+        async function triggerResumeScan() {
+            const btn = document.getElementById('resumeScanBtn');
+            const orig = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "📋 Scanning...";
+            try {
+                const res = await fetch('/api/resume-scan', { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('success', 'Resume Scanned',
+                        `Generated ${data.keywords.length} keywords from ${data.source}. Settings updated!`, 5000);
+                    fetchSettings();
+                } else {
+                    showToast('error', 'Scan Failed', data.error || 'Unknown error');
+                }
+            } catch (err) {
+                showToast('error', 'Resume Scan Error', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = orig;
+            }
+        }
+
+        async function checkStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                const indicator = document.getElementById('runningIndicator');
+                const runBtn = document.getElementById('runNowBtn');
+                const resetBtn = document.getElementById('resetStatusBtn');
+                if (data.is_running) {
+                    indicator.style.display = 'flex';
+                    document.getElementById('runningText').textContent = data.status || "Running...";
+                    runBtn.disabled = true;
+                    runBtn.textContent = "Scanning...";
+                    resetBtn.style.display = 'inline-flex';
+                    if (!window.lastFetchTime || Date.now() - window.lastFetchTime > 6000) {
+                        fetchJobs();
+                        window.lastFetchTime = Date.now();
+                    }
+                    if (data.progress) updateProgress(data.progress);
+                } else {
+                    if (data.progress) updateProgress(data.progress);
+                    else hideProgress();
+                    if (runBtn.dataset.wasRunning === "true") {
+                        indicator.style.display = 'flex';
+                        document.getElementById('runningText').textContent = data.status === 'idle' ? "Search finished!" : "Stopped: " + data.status;
+                        runBtn.disabled = true;
+                        runBtn.textContent = "✅ Done";
+                        resetBtn.style.display = 'none';
+                        fetchJobs();
+                        showToast('success', 'Search Complete', 'All platforms scanned and evaluated.', 5000);
+                        setTimeout(() => {
+                            indicator.style.display = 'none';
+                            runBtn.disabled = false;
+                            runBtn.textContent = "🚀 开始找适合我的工作";
+                        }, 4000);
+                    } else {
+                        if (runBtn.textContent !== "✅ Done") {
+                            indicator.style.display = 'none';
+                            runBtn.disabled = false;
+                            runBtn.textContent = "🚀 开始找适合我的工作";
+                            resetBtn.style.display = 'none';
+                        }
+                    }
+                }
+                runBtn.dataset.wasRunning = data.is_running ? "true" : "false";
+            } catch (e) {
+                console.error("Status check error:", e);
+            }
+        }
+
+        async function resetScraper() {
+            if (!confirm("Force-reset the scraper status to idle? Only do this if Run Scraper says it's running but nothing is happening.")) return;
+            try {
+                const res = await fetch('/api/reset', { method: 'POST' });
+                const data = await res.json();
+                showToast('info', 'Reset', data.message);
+                hideProgress();
+                checkStatus();
+            } catch (e) {
+                showToast('error', 'Reset Error', e.message);
+            }
+        }
+
+        function updateStats() {
+            const excellent = allJobs.filter(j => j.score >= 90).length;
+            const good = allJobs.filter(j => j.score >= 80 && j.score < 90).length;
+            const moderate = allJobs.filter(j => j.score >= 50 && j.score < 80).length;
+            document.getElementById('statExcellent').textContent = excellent;
+            document.getElementById('statGood').textContent = good;
+            document.getElementById('statModerate').textContent = moderate;
+            document.getElementById('statTotal').textContent = allJobs.length;
+            const flagged = allJobs.filter(j => j.risk && (j.risk.level === 'high' || j.risk.level === 'medium')).length;
+            document.getElementById('statRisk').textContent = flagged;
+            const applied = allJobs.filter(j => ['applied', 'interviewing', 'offered'].includes(j.status)).length;
+            document.getElementById('statApplied').textContent = applied;
+        }
+
+        let displayedCount = 0;
+        const PAGE_SIZE = 30;
+        let filteredJobs = [];
+
+        const RISK_MAP = {
+            high: { label: '🔴 高风险', cls: 'high' },
+            medium: { label: '🟡 注意', cls: 'medium' },
+            low: { label: '🟢 正常', cls: 'low' }
+        };
+        function riskBadgeHtml(job) {
+            const r = job.risk;
+            if (!r || !r.level || !RISK_MAP[r.level]) return '';
+            const info = RISK_MAP[r.level];
+            const reasons = Array.isArray(r.reasons) && r.reasons.length
+                ? r.reasons.join('\n• ')
+                : (r.reason || '未检测到明显风险');
+            return `<span class="risk-badge ${info.cls}" title="公司背景调查：\n• ${esc(reasons)}">${info.label}</span>`;
+        }
+
+        function renderBeginnerBanner() {
+            const banner = document.getElementById('beginnerBanner');
+            const on = document.getElementById('beginnerModeCheckbox').checked;
+            if (!on) { banner.style.display = 'none'; return; }
+            const safe = allJobs.filter(j => j.fit_type === 'safe').length;
+            const stretch = allJobs.filter(j => j.fit_type === 'stretch').length;
+            const penang = allJobs.filter(j => /penang|pulau pinang|george town|bayan lepas/i.test(j.location || '')).length;
+            const kl = allJobs.filter(j => j.kl_transfer === true || j.kl_potential === true).length;
+            const flagged = allJobs.filter(j => j.risk && j.risk.level === 'high').length;
+            banner.style.display = 'block';
+            banner.innerHTML = `<h3>🧑‍💻 新手模式已开启 — 别慌，我们陪你慢慢来</h3>
+                <div>这里共有 <b>${allJobs.length}</b> 份已筛选工作。列表已把"你现有技能就能直接上手"的<b>稳妥岗</b>排在前面，点开每份都附了人话说明，看不懂就点开看。</div>
+                <div class="bb-counts">
+                    <span class="bb-chip">💪 稳妥岗 ${safe}</span>
+                    <span class="bb-chip">🚀 可冲刺 ${stretch}</span>
+                    <span class="bb-chip">📍 Penang ${penang}</span>
+                    <span class="bb-chip">🔄 可转KL ${kl}</span>
+                    <span class="bb-chip">🚩 高风险 ${flagged}</span>
+                </div>`;
+        }
+
+        function renderJobsGrid(reset = true) {
+            const grid = document.getElementById('jobsGrid');
+            if (reset) {
+                filteredJobs = [...allJobs];
+                if (activeFilters.platform !== 'all') filteredJobs = filteredJobs.filter(j => j.platform === activeFilters.platform);
+                if (activeFilters.score !== 'all') { const min = parseInt(activeFilters.score); filteredJobs = filteredJobs.filter(j => (j.score || 0) >= min); }
+                if (activeFilters.search) { const q = activeFilters.search.toLowerCase(); filteredJobs = filteredJobs.filter(j => (j.title || '').toLowerCase().includes(q) || (j.company || '').toLowerCase().includes(q) || (j.location || '').toLowerCase().includes(q)); }
+                if (activeFilters.extra === 'penang') filteredJobs = filteredJobs.filter(j => /penang|pulau pinang|george town|bayan lepas/i.test(j.location || ''));
+                if (activeFilters.extra === 'kltransfer') filteredJobs = filteredJobs.filter(j => j.kl_transfer === true || j.kl_potential === true);
+                if (activeFilters.extra === 'safe') filteredJobs = filteredJobs.filter(j => j.fit_type === 'safe');
+                if (activeFilters.status !== 'all') filteredJobs = filteredJobs.filter(j => (j.status || 'new') === activeFilters.status);
+                if (activeFilters.minSalary > 0) filteredJobs = filteredJobs.filter(j => (j.salary_monthly || 0) >= activeFilters.minSalary);
+                if (activeFilters.hideOld && activeFilters.maxAge > 0) {
+                    filteredJobs = filteredJobs.filter(j => j.posted_days_ago === null || j.posted_days_ago <= activeFilters.maxAge);
+                }
+                const sorting = document.getElementById('sortSelect').value;
+                if (sorting === 'score-desc') filteredJobs.sort((a,b) => (b.score||0) - (a.score||0));
+                else if (sorting === 'score-asc') filteredJobs.sort((a,b) => (a.score||0) - (b.score||0));
+                else if (sorting === 'salary-desc') filteredJobs.sort((a,b) => (b.salary_monthly||0) - (a.salary_monthly||0));
+                else if (sorting === 'date-desc') filteredJobs.sort((a,b) => (b.scraped_at||'').localeCompare(a.scraped_at||''));
+                else if (sorting === 'age-asc') filteredJobs.sort((a,b) => ((a.posted_days_ago===null?1e9:a.posted_days_ago) - (b.posted_days_ago===null?1e9:b.posted_days_ago)));
+                else if (sorting === 'fit-safe') { const rank = j => j.fit_type === 'safe' ? 0 : j.fit_type === 'stretch' ? 1 : 2; filteredJobs.sort((a,b) => rank(a) - rank(b) || (b.score||0) - (a.score||0)); }
+                displayedCount = 0;
+                grid.innerHTML = '';
+            }
+            if (filteredJobs.length === 0 && displayedCount === 0) {
+                grid.innerHTML = `<div class="no-results-pane"><p>🔍</p><h3>No matching positions</h3><p>Try adjusting filters or run the scraper to find new jobs.</p></div>`;
+                return;
+            }
+            const fragment = document.createDocumentFragment();
+            const end = Math.min(displayedCount + PAGE_SIZE, filteredJobs.length);
+            for (let i = displayedCount; i < end; i++) {
+                const job = filteredJobs[i];
+                const score = job.score || 0;
+                let scoreClass = 'low';
+                if (score >= 90) scoreClass = 'excellent';
+                else if (score >= 80) scoreClass = 'good';
+                else if (score >= 50) scoreClass = 'moderate';
+                const platform = (job.platform || '').charAt(0).toUpperCase() + (job.platform || '').slice(1);
+                const card = document.createElement('div');
+                card.className = 'job-card';
+                card.dataset.id = job.id;
+                const jobIdSafe = esc(job.id);
+                const st = job.status || 'new';
+                card.innerHTML = `
+                    <div class="card-header-row">
+                        <div class="card-header-left">
+                            <input type="checkbox" class="job-select-checkbox" data-id="${jobIdSafe}" onchange="updateSelectedCount()" style="width: 16px; height: 16px; margin-top: 5px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0;">
+                            <div>
+                                <h3 class="card-title"><a href="${esc(job.url)}" target="_blank">${esc(job.title)}</a></h3>
+                                <p class="card-company">${esc(job.company)}</p>
+                            </div>
+                        </div>
+                        <div class="score-circle ${scoreClass}">${score}%</div>
+                    </div>
+                    <div class="card-tags">
+                        ${job.fit_type === 'safe' ? `<span class="fit-tag fit-safe">💪 稳妥岗</span>` : job.fit_type === 'stretch' ? `<span class="fit-tag fit-stretch">🚀 可冲刺</span>` : `<span class="fit-tag fit-unknown">❓ 待评估</span>`}
+                        <span class="fit-label">适合度：${score >= 90 ? '高' : score >= 80 ? '中上' : score >= 50 ? '中等' : '偏挑战'}</span>
+                        <span class="card-tag platform">${esc(platform)}</span>
+                        <span class="card-tag location">📍 ${esc(job.location || 'Unknown')}</span>
+                        ${job.scraped_at ? `<span class="card-tag date">🕐 ${esc(job.scraped_at.split(' ')[0])}</span>` : ''}
+                        <span class="card-tag salary">💰 ${esc(job.salary_raw || '薪资未注明')}</span>
+                        ${job.kl_transfer ? `<span class="card-tag kl-transfer">🔄 可转KL</span>` : ''}
+                        ${job.kl_potential && !job.kl_transfer ? `<span class="card-tag kl-transfer" style="opacity:0.8;border-style:dashed;">🔄 潜在可转KL</span>` : ''}
+                        ${job.posted_age_label ? `<span class="card-tag age ${job.posted_days_ago !== null && job.posted_days_ago > (activeFilters.maxAge || 30) ? 'stale' : ''}">🕓 ${esc(job.posted_age_label)}</span>` : ''}
+                        ${riskBadgeHtml(job)}
+                    </div>
+                    ${job.reason ? `<div class="card-ai-reason">${esc(job.reason)}</div>` : ''}
+                    <div class="card-footer-row">
+                        <select class="status-select st-${st}" data-id="${jobIdSafe}" onchange="updateJobStatus(this)">
+                            ${statusOptionsHtml(st)}
+                        </select>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <button class="delete-btn" onclick="deleteJob(this)" title="Remove this job">🗑️</button>
+                            ${job.cover_letter ? `<button class="apply-btn apply-btn-outline" onclick="openCoverLetter(this)">✉️ Cover Letter</button>` : ''}
+                            <a class="apply-btn" href="${esc(job.url)}" target="_blank">View →</a>
+                        </div>
+                    </div>`;
+                fragment.appendChild(card);
+            }
+            grid.appendChild(fragment);
+            displayedCount = end;
+            const existingBtn = document.getElementById('loadMoreBtn');
+            if (existingBtn) existingBtn.remove();
+            if (displayedCount < filteredJobs.length) {
+                const loadMoreBtn = document.createElement('button');
+                loadMoreBtn.id = 'loadMoreBtn';
+                loadMoreBtn.className = 'btn btn-primary';
+                loadMoreBtn.style.cssText = 'width: 100%; margin-top: 16px; padding: 12px;';
+                loadMoreBtn.textContent = `Load More (${displayedCount} of ${filteredJobs.length})`;
+                loadMoreBtn.onclick = () => renderJobsGrid(false);
+                grid.appendChild(loadMoreBtn);
+            }
+            updateStats();
+        }
+
+        async function updateJobStatus(sel) {
+            const jobId = sel.dataset.id;
+            const status = sel.value;
+            try {
+                const res = await fetch('/api/jobs/status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: jobId, status })
+                });
+                const text = await res.text();
+                let data = {};
+                try { data = JSON.parse(text); } catch (e) {}
+                if (!res.ok) throw new Error(data.error || text || 'Update failed');
+                const job = allJobs.find(j => j.id === jobId);
+                if (job) job.status = status;
+                showToast('success', '状态已更新', data.message || `状态: ${STATUS_MAP[status] || status}`);
+            } catch (err) {
+                showToast('error', '更新失败', err.message);
+                const job = allJobs.find(j => j.id === jobId);
+                sel.value = (job && job.status) || 'new';
+            }
+            sel.className = sel.className.replace(/st-\w+/g, '').trim() + ` st-${status}`;
+        }
+
+        async function deleteJob(btn) {
+            const jobId = btn.dataset.id;
+            if (!confirm("Delete this job entry?")) return;
+            try {
+                const res = await fetch('/api/jobs/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: jobId })
+                });
+                const text = await res.text();
+                let data = {};
+                try { data = JSON.parse(text); } catch(e) {}
+                if (!res.ok) throw new Error(data.error || text || "Delete failed");
+                allJobs = allJobs.filter(j => j.id !== jobId);
+                showToast('success', 'Deleted', 'Job entry removed.');
+                updateStats();
+                renderJobsGrid();
+            } catch (err) {
+                showToast('error', 'Delete Failed', err.message);
+            }
+        }
+
+        function openCoverLetter(btn) {
+            const jobId = btn.dataset.id;
+            const job = allJobs.find(j => j.id === jobId);
+            if (!job || !job.cover_letter) return;
+            document.getElementById('clModalJobInfo').textContent = `${job.title} @ ${job.company}`;
+            document.getElementById('coverLetterText').value = job.cover_letter;
+            const modal = document.getElementById('coverLetterModal');
+            modal.style.display = 'flex';
+            modal.offsetHeight;
+            modal.classList.add('open');
+            document.getElementById('copyClBtn').textContent = '📋 Copy to Clipboard';
+        }
+
+        function closeCoverLetterModal() {
+            const modal = document.getElementById('coverLetterModal');
+            modal.classList.remove('open');
+            setTimeout(() => { modal.style.display = 'none'; }, 250);
+        }
+
+        function openOnboarding() {
+            const m = document.getElementById('onboardingModal');
+            m.style.display = 'flex';
+            m.offsetHeight;
+            m.classList.add('open');
+        }
+        function closeOnboarding() {
+            const m = document.getElementById('onboardingModal');
+            m.classList.remove('open');
+            setTimeout(() => { m.style.display = 'none'; }, 250);
+            try { localStorage.setItem('onboarded_v1', '1'); } catch (e) {}
+        }
+
+        async function copyCoverLetter() {
+            const text = document.getElementById('coverLetterText').value;
+            const copyBtn = document.getElementById('copyClBtn');
+            try { await navigator.clipboard.writeText(text); }
+            catch (err) { const ta = document.getElementById('coverLetterText'); ta.select(); document.execCommand('copy'); }
+            copyBtn.textContent = '✅ Copied!';
+            setTimeout(() => { copyBtn.textContent = '📋 Copy to Clipboard'; }, 2000);
+        }
+
+        async function clearAllJobs() {
+            if (!confirm("Clear ALL jobs? This cannot be undone.")) return;
+            try {
+                const res = await fetch('/api/jobs/clear-all', { method: 'POST' });
+                const text = await res.text();
+                let data = {};
+                try { data = JSON.parse(text); } catch(e) {}
+                if (!res.ok) throw new Error(data.error || text || "Clear failed");
+                allJobs = [];
+                showToast('success', 'Cleared', 'All job data deleted.');
+                updateStats();
+                renderJobsGrid();
+            } catch (err) {
+                showToast('error', 'Clear Failed', err.message);
+            }
+        }
+
+        function updateSelectedCount() {
+            const checkboxes = document.querySelectorAll('.job-select-checkbox:checked');
+            const count = checkboxes.length;
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            deleteBtn.textContent = `🗑️ Delete (${count})`;
+            if (count > 0) {
+                deleteBtn.disabled = false;
+                deleteBtn.style.cursor = 'pointer';
+                deleteBtn.style.color = 'var(--red)';
+                deleteBtn.style.borderColor = 'var(--red)';
+            } else {
+                deleteBtn.disabled = true;
+                deleteBtn.style.cursor = 'not-allowed';
+                deleteBtn.style.color = 'var(--text-dim)';
+                deleteBtn.style.borderColor = 'var(--border)';
+            }
+        }
+
+        async function deleteSelectedJobs() {
+            const checkboxes = document.querySelectorAll('.job-select-checkbox:checked');
+            const ids = Array.from(checkboxes).map(cb => cb.dataset.id);
+            if (ids.length === 0) return;
+            if (!confirm(`Delete ${ids.length} selected jobs?`)) return;
+            try {
+                const res = await fetch('/api/jobs/delete-batch', { method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids })
+                });
+                const text = await res.text();
+                let data = {};
+                try { data = JSON.parse(text); } catch(e) {}
+                if (!res.ok) throw new Error(data.error || text || "Batch delete failed");
+                showToast('success', 'Deleted', `Removed ${ids.length} jobs.`);
+                allJobs = allJobs.filter(j => !ids.includes(j.id));
+                document.getElementById('selectAllCheckbox').checked = false;
+                updateSelectedCount();
+                updateStats();
+                renderJobsGrid();
+            } catch (err) {
+                showToast('error', 'Delete Failed', err.message);
+            }
+        }
+
+        function toggleSelectAll(e) {
+            const checked = e.target.checked;
+            document.querySelectorAll('.jobs-grid .job-select-checkbox').forEach(cb => { cb.checked = checked; });
+            updateSelectedCount();
+        }
+
+        function toggleDrawer(isOpen) {
+            const drawer = document.getElementById('settingsDrawer');
+            const overlay = document.getElementById('drawerOverlay');
+            if (isOpen) { drawer.classList.add('open'); overlay.classList.add('open'); }
+            else { drawer.classList.remove('open'); overlay.classList.remove('open'); }
+        }
+
+        // ===== Browser Agent =====
+        async function startBrowserAgent() {
+            const btn = document.getElementById('browserAgentBtn');
+            const status = document.getElementById('browserStatus');
+            btn.disabled = true;
+            btn.textContent = "🤖 Starting...";
+            status.style.display = 'inline-flex';
+            try {
+                const res = await fetch('/api/browser/start', { method: 'POST' });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+                showToast('info', 'Browser Agent', 'Chrome opened — watch it on screen!', 5000);
+            } catch (err) {
+                showToast('error', 'Browser Agent Error', err.message);
+                btn.disabled = false;
+                btn.textContent = "🤖 Auto Browse";
+                status.style.display = 'none';
+            }
+        }
+        async function stopBrowserAgent() {
+            try {
+                const res = await fetch('/api/browser/stop', { method: 'POST' });
+                const data = await res.json();
+                showToast('info', 'Stopped', data.message, 3000);
+            } catch (err) {
+                showToast('error', 'Stop Error', err.message);
+            }
+        }
+        // Poll browser status
+        setInterval(async () => {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                const btn = document.getElementById('browserAgentBtn');
+                const status = document.getElementById('browserStatus');
+                if (data.status && data.status.includes('Browser agent')) {
+                    status.style.display = 'inline-flex';
+                    document.querySelector('#browserStatus .pulse-dot').style.display = 'inline-block';
+                    btn.disabled = true;
+                    btn.textContent = "🤖 Browsing...";
+                    if (data.is_running === false) {
+                        status.style.display = 'none';
+                        btn.disabled = false;
+                        btn.textContent = "🤖 Auto Browse";
+                        fetchJobs();
+                        showToast('success', 'Browser Done', 'Job search completed via browser!', 5000);
+                    }
+                } else if (data.status && data.status.includes('Browser agent done')) {
+                    status.style.display = 'none';
+                    btn.disabled = false;
+                    btn.textContent = "🤖 Auto Browse";
+                    fetchJobs();
+                } else if (data.status && data.status.includes('Browser agent error')) {
+                    status.style.display = 'none';
+                    btn.disabled = false;
+                    btn.textContent = "🤖 Auto Browse";
+                    showToast('error', 'Browser Agent', 'An error occurred during browsing.', 5000);
+                }
+            } catch (e) { /* ignore */ }
+        }, 3000);
+
+        // Resume upload
+        async function uploadResumeFile(file) {
+            console.log('[upload]', file ? `file=${file.name} type=${file.type} size=${file.size}` : 'no file object');
+            if (!file) {
+                showToast('error', 'Upload Failed', '请重新拖拽文件（未读取到文件内容）');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = async () => {
+                const dataUrl = String(reader.result || '');
+                const formData = new FormData();
+                const payload = { filename: file.name, dataUrl: dataUrl };
+                try {
+                    const res = await fetch('/api/upload-resume', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    console.log('[upload] status', res.status);
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        showToast('success', 'Resume Uploaded', data.message);
+                        document.getElementById('resumeFileName').textContent = data.filename;
+                        document.getElementById('resumeFileName').style.display = 'block';
+                        if (data.auto_search) {
+                            const indicator = document.getElementById('runningIndicator');
+                            const runBtn = document.getElementById('runNowBtn');
+                            indicator.style.display = 'flex';
+                            document.getElementById('runningText').textContent = "根据你的简历自动搜索匹配的工作中...";
+                            runBtn.disabled = true;
+                            runBtn.textContent = "Scanning...";
+                            setTimeout(checkStatus, 800);
+                        }
+                    } else {
+                        console.log('[upload] error body', data);
+                        showToast('error', 'Upload Failed', data.error || `HTTP ${res.status}`);
+                    }
+                } catch (err) {
+                    console.log('[upload] fetch error', err);
+                    showToast('error', 'Upload Error', err.message);
+                }
+            };
+            reader.onerror = () => showToast('error', 'Upload Error', '读取文件失败');
+            reader.readAsDataURL(file);
+        }
+
+        function handleResumeUpload(input) {
+            const file = input.files && input.files[0];
+            uploadResumeFile(file);
+            input.value = '';
+        }
+
+        // Drop zone
+        const dropZone = document.getElementById('resumeDropZone');
+        if (dropZone) {
+            dropZone.addEventListener('click', () => document.getElementById('resumeFileInput').click());
+            dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; });
+            dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'var(--border)'; });
+            dropZone.addEventListener('drop', e => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--border)';
+                // Read the dropped file directly from the DataTransfer; never
+                // assign input.files (read-only) and avoid DataTransfer.copy.
+                const file = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files[0] : null;
+                uploadResumeFile(file);
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('openSettingsBtn').addEventListener('click', () => { toggleDrawer(true); fetchSettings(); });
+        document.getElementById('closeSettingsBtn').addEventListener('click', () => toggleDrawer(false));
+        document.getElementById('drawerOverlay').addEventListener('click', () => toggleDrawer(false));
+        document.getElementById('cancelSettingsBtn').addEventListener('click', () => toggleDrawer(false));
+        document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+        document.getElementById('runNowBtn').addEventListener('click', triggerScraper);
+        document.getElementById('resumeScanBtn').addEventListener('click', triggerResumeScan);
+        document.getElementById('browserAgentBtn').addEventListener('click', startBrowserAgent);
+        document.getElementById('resetStatusBtn').addEventListener('click', resetScraper);
+        document.getElementById('clearAllBtn').addEventListener('click', clearAllJobs);
+        document.getElementById('selectAllCheckbox').addEventListener('change', toggleSelectAll);
+        document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelectedJobs);
+        // Debounced search
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', e => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                activeFilters.search = e.target.value;
+                renderJobsGrid(true);
+            }, 300);
+        });
+        document.getElementById('sortSelect').addEventListener('change', () => renderJobsGrid(true));
+        document.getElementById('platformFilters').addEventListener('click', e => {
+            if (!e.target.classList.contains('pill-btn')) return;
+            document.querySelectorAll('#platformFilters .pill-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            activeFilters.platform = e.target.dataset.platform;
+            renderJobsGrid(true);
+        });
+        document.getElementById('scoreFilters').addEventListener('click', e => {
+            if (!e.target.classList.contains('pill-btn')) return;
+            document.querySelectorAll('#scoreFilters .pill-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            activeFilters.score = e.target.dataset.score;
+            renderJobsGrid(true);
+        });
+        document.getElementById('extraFilters').addEventListener('click', e => {
+            if (!e.target.classList.contains('pill-btn')) return;
+            const sel = e.target.dataset.extra;
+            if (e.target.classList.contains('active')) {
+                e.target.classList.remove('active');
+                activeFilters.extra = 'all';
+            } else {
+                document.querySelectorAll('#extraFilters .pill-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                activeFilters.extra = sel;
+            }
+            renderJobsGrid(true);
+        });
+        document.getElementById('statusFilters').addEventListener('click', e => {
+            if (!e.target.classList.contains('pill-btn')) return;
+            const sel = e.target.dataset.status;
+            if (e.target.classList.contains('active') && sel !== 'all') {
+                e.target.classList.remove('active');
+                activeFilters.status = 'all';
+                document.querySelector('#statusFilters [data-status="all"]').classList.add('active');
+            } else {
+                document.querySelectorAll('#statusFilters .pill-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                activeFilters.status = sel;
+            }
+            renderJobsGrid(true);
+        });
+        document.getElementById('minSalaryFilter').addEventListener('input', e => {
+            activeFilters.minSalary = parseInt(e.target.value) || 0;
+            renderJobsGrid(true);
+        });
+        document.getElementById('hideOldCheckbox').addEventListener('change', e => {
+            activeFilters.hideOld = e.target.checked;
+            renderJobsGrid(true);
+        });
+        document.getElementById('maxAgeFilter').addEventListener('input', e => {
+            activeFilters.maxAge = parseInt(e.target.value) || 0;
+            renderJobsGrid(true);
+        });
+        const beginnerModeCheckbox = document.getElementById('beginnerModeCheckbox');
+        beginnerModeCheckbox.addEventListener('change', () => {
+            if (beginnerModeCheckbox.checked && document.getElementById('sortSelect').value !== 'fit-safe') {
+                document.getElementById('sortSelect').value = 'fit-safe';
+            }
+            renderBeginnerBanner();
+            renderJobsGrid(true);
+        });
+
+        // Init
+        fetchJobs();
+        setTimeout(() => { fetchSettings(); setInterval(checkStatus, 2500); }, 500);
+    </script>
+</body>
+</html>

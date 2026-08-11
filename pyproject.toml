@@ -1,0 +1,59 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+branch = true
+source = ["webapp", "rule_filter", "score_adjuster", "database", "config", "app", "models", "repositories", "schema_migrations", "resume_scanner", "resume_parser"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "if __name__ == .__main__.:",
+    "pragma: no cover",
+]
+fail_under = 90
+show_missing = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+# Strict lint gate: bug risks (E/F), import sorting (I), modern idioms (UP),
+# opinionated simplifications (SIM) and bugbear (B) are all enforced.
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+# Legacy AI/prompt modules keep long LLM prompt templates on single lines, and
+# the runner scripts intentionally import after sys.path setup. E501/E402 there
+# are intentional, so they are exempted; everything else is enforced.
+[tool.ruff.lint.per-file-ignores]
+"ai_filter.py" = ["E501"]
+"agnes_filter.py" = ["E501"]
+"gemini_filter.py" = ["E501"]
+"agy_filter.py" = ["E501"]
+"job_evaluator.py" = ["E501"]
+"prompts.py" = ["E501"]
+"run_app.py" = ["E402"]
+"run_server_with_logging.py" = ["E402"]
+
+# Static type checking for the maintained core. Third-party libs without stubs
+# (fitz, jobspy, ...) are ignored, and legacy AI/scraper modules that mypy pulls
+# in transitively are only followed, not reported (their own errors are out of
+# scope for the core gate).
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+follow_imports = "silent"
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["browser_agent", "main", "gemini_filter", "scraper", "jobspy_scraper"]
+follow_imports = "silent"
+
+# Security scanner. Tests are excluded (asserts are intentional there); the
+# remaining intentionally-loosened patterns in the legacy scraper/browser
+# pipeline are documented with inline # nosec markers.
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]
+recursive = true
