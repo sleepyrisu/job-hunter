@@ -134,8 +134,12 @@ CI (`.github/workflows/ci.yml`): Python 3.11/3.12 matrix, ruff + mypy + bandit +
 
 ## Deployment (Render.com / Docker)
 
-- **Render**: Build `pip install -r requirements.txt && playwright install chromium --with-deps`; Start `gunicorn --bind 0.0.0.0:8888 --workers 2 --threads 4 app:app`
-- **Docker**: `docker build -t ai-job-hunter .` (see `Dockerfile`)
+- **Render** (recommended): push the repo, then use the Blueprint at `render.yaml`
+  (New > Blueprint > connect repo). Build = `pip install -r requirements.txt && playwright install chromium --with-deps`, start = `gunicorn --config gunicorn.conf.py app:app`. Set `DASHBOARD_TOKEN` under Environment.
+  Free instances use an ephemeral filesystem — `jobs.db` / `settings.json` reset on every deploy; for persistence attach a paid Disk.
+- **Docker**: `docker build -t ai-job-hunter .` (see `Dockerfile`), run with a volume for `/app` data.
+
+`gunicorn.conf.py` pins a single worker and starts the scheduler thread in the master process, so scheduled runs work under gunicorn too (not just `python app.py`).
 
 ## Docs
 

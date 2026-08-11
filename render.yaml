@@ -1,0 +1,23 @@
+# Render Blueprint: deploy the AI Job Hunter web app with one click.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Notes:
+#   - The scheduler thread is started by gunicorn.conf.py (gunicorn loads it
+#     automatically from the working directory).
+#   - Free instances have an ephemeral filesystem: jobs.db / settings.json
+#     reset on every deploy/restart. For persistence, add a paid Disk or use
+#     Docker with a persistent volume.
+services:
+  - type: web
+    name: ai-job-hunter
+    runtime: python
+    plan: free
+    pythonVersion: 3.12.0
+    buildCommand: pip install -r requirements.txt && playwright install chromium --with-deps
+    startCommand: gunicorn --config gunicorn.conf.py app:app
+    healthCheckPath: /
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: DASHBOARD_TOKEN
+        sync: false

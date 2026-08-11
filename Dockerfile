@@ -13,4 +13,5 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 EXPOSE 8888
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8888", "--workers", "2", "--threads", "4", "app:app"]
+# gunicorn.conf.py controls bind/workers/threads and starts the scheduler thread.
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "app:app"]
