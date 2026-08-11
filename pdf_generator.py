@@ -81,11 +81,9 @@ class PDFGenerator:
     def _get_pdf_page_count(self, pdf_path):
         """Extract page count from PDF file."""
         try:
-            import fitz  # PyMuPDF
-            doc = fitz.open(pdf_path)
-            page_count = len(doc)
-            doc.close()
-            return page_count
+            from pypdf import PdfReader
+            reader = PdfReader(pdf_path)
+            return len(reader.pages)
         except ImportError:
             # Fallback: parse PDF header
             with open(pdf_path, 'rb') as f:
@@ -96,12 +94,9 @@ class PDFGenerator:
     def verify_pdf_text(self, pdf_path):
         """Verify PDF text layer for ATS compatibility."""
         try:
-            import fitz
-            doc = fitz.open(pdf_path)
-            text = ""
-            for page in doc:
-                text += page.get_text()
-            doc.close()
+            from pypdf import PdfReader
+            reader = PdfReader(pdf_path)
+            text = "".join(page.extract_text() or "" for page in reader.pages)
             
             issues = []
             
@@ -120,7 +115,7 @@ class PDFGenerator:
                 "clean": len(issues) == 0
             }
         except ImportError:
-            return {"text_length": 0, "has_email": False, "issues": ["PyMuPDF not installed"], "clean": False}
+            return {"text_length": 0, "has_email": False, "issues": ["pypdf not installed"], "clean": False}
     
     def generate_cv_for_company(self, company_name, profile_data):
         """Generate a tailored CV for a specific company."""

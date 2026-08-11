@@ -21,12 +21,9 @@ MAX_FILE_SIZE = 16 * 1024 * 1024
 
 
 def _parse_pdf(save_path: str) -> str:
-    import fitz
-    doc = fitz.open(save_path)
-    try:
-        return "\n".join(page.get_text() for page in doc)
-    finally:
-        doc.close()
+    from pypdf import PdfReader
+    reader = PdfReader(save_path)
+    return "\n".join(page.extract_text() or "" for page in reader.pages)
 
 
 def _parse_docx(save_path: str) -> str:
