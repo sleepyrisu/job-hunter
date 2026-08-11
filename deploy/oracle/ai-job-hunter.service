@@ -1,0 +1,19 @@
+[Unit]
+Description=AI Job Hunter web dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=jobhunter
+Group=jobhunter
+WorkingDirectory=/opt/ai-job-hunter
+EnvironmentFile=/opt/ai-job-hunter/.env
+# gunicorn.conf.py pins a single worker and starts the scheduler thread.
+ExecStart=/opt/ai-job-hunter/.venv/bin/gunicorn --config gunicorn.conf.py app:app
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
