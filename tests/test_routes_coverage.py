@@ -247,10 +247,10 @@ def test_resume_upload_pdf_parse_fail_still_ok(client, auth_headers, monkeypatch
     monkeypatch.setattr(rr.threading, "Thread", FakeThread)
     monkeypatch.setattr("webapp.state.is_running_flag", False)
 
-    def boom_fitz(path):
-        raise ImportError("no fitz")
+    def boom_pdf(path):
+        raise ImportError("no pypdf")
 
-    monkeypatch.setattr(rr, "_parse_pdf", boom_fitz)
+    monkeypatch.setattr(rr, "_parse_pdf", boom_pdf)
     data = {"resume": (io.BytesIO(b"%PDF-1.4 fake"), "resume.pdf"), "auto_run": "0"}
     res = client.post("/api/upload-resume", data=data, headers=auth_headers,
                       content_type="multipart/form-data")
