@@ -168,8 +168,8 @@ def tailor_resume_for_job(resume_text, job_text, resume_skills):
 
 if __name__ == "__main__":
     test_resume = """
-    Tan Wei Ming
-    Email: tanweiming@example.com
+    John Doe
+    Email: john.doe@example.com
     Phone: +60 12-345 6789
 
     Skills
@@ -178,7 +178,7 @@ if __name__ == "__main__":
     - Docker, Git
 
     Experience
-    Data Analyst at Nexa Analytics (10 months)
+    Data Analyst at Acme Corp (10 months)
     - Developed automated reporting solutions
     - Managed data pipelines using Python
 

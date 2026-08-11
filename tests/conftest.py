@@ -65,7 +65,7 @@ def auth_headers():
 # scorers are exercised against deterministic input instead of disk state.
 
 RULE_RESUME = {
-    "name": "Tan Wei Ming",
+    "name": "John Doe",
     "education": "Diploma",
     "experience_years": 1,
     "skills": ["Power Automate", "RPA", "Python", "Data Analysis", "SQL"],
@@ -74,8 +74,8 @@ RULE_RESUME = {
                 "data analysis python sql penang automation workflow",
 }
 
-RULE_RESUME_MD = """Tan Wei Ming
-Email: tanweiming@example.com
+RULE_RESUME_MD = """John Doe
+Email: john.doe@example.com
 Phone: +6012-345-6789
 Location: Georgetown, Penang, Malaysia
 
@@ -90,8 +90,8 @@ and QA audits for a hardware vendor. RPA developer using Power Automate from a 3
 - Microsoft Excel, Power BI
 
 ## Experience
-Data Analyst (1 year) at Nexa Analytics Global
-Automation Intern at Vertex Logistics
+Data Analyst (1 year) at Acme Corp
+Automation Intern at Acme Logistics
 
 ## Education
 Diploma of Computer Science

@@ -128,9 +128,9 @@ def extract_matching_keywords(resume_text, job_text, top_n=10):
 
 if __name__ == "__main__":
     resume = """
-    Tan Wei Ming
+    John Doe
     Skills: Python, Power Automate, RPA, SQL, Data Analysis
-    Experience: Data Analyst at Nexa Analytics (10 months), RPA Intern at Vertex Logistics
+    Experience: Data Analyst at Acme Corp (10 months), RPA Intern at Acme Logistics
     Education: Diploma in Computer Science
     """
 

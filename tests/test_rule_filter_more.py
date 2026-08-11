@@ -17,7 +17,7 @@ from rule_filter import (
 
 def _resume(**kw):
     base = {
-        "name": "Tan Wei Ming",
+        "name": "John Doe",
         "education": "Diploma",
         "experience_years": 1,
         "skills": ["Python", "Power Automate", "RPA", "SQL", "Data Analysis"],

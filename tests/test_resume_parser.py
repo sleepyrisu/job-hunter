@@ -14,7 +14,7 @@ Target Role: Data Analyst, RPA Developer
 - Data: Data Analysis
 
 ## Experience
-2 years of professional experience as Data Analyst at Nexa Analytics
+2 years of professional experience as Data Analyst at Acme Corp
 
 ## Education
 Diploma in Computer Science

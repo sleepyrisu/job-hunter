@@ -90,7 +90,7 @@ def cover_letter_prompt(resume, job_title, job_company, job_description, behavio
 2. Keep it within 3 to 4 concise, impactful paragraphs.
 3. Align the candidate's core strengths (RPA development, Python coding, data analytics, automation) with the specific requirements in the job description.
 4. Maintain an enthusiastic, professional, and convincing tone.
-5. End with a standard professional sign-off (e.g. "Sincerely, Tan Wei Ming").
+5. End with a standard professional sign-off (e.g. "Sincerely, John Doe").
 6. Respond ONLY with the final cover letter text. Do not wrap it in markdown, explanations, or introductory text.
 7. No em-dashes, no cliches, no empty filler.
 """
