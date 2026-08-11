@@ -82,7 +82,7 @@ repositories.py            仓储层（JobRepository / UserProfileRepository）
 schema_migrations.py       SQLite schema 迁移（PRAGMA user_version）
 database.py                数据库操作
 rule_filter.py / score_adjuster.py / resume_parser.py ...   评分/解析核心
-tests/                     195 个测试，覆盖率 90%+
+tests/                     232 个测试，覆盖率 90%+
 ```
 
 ## API 概览
@@ -121,7 +121,7 @@ tests/                     195 个测试，覆盖率 90%+
 ## 测试与 CI
 
 ```bash
-pytest                                   # 195 tests
+pytest                                   # 232 tests
 pytest --cov=webapp --cov=... --cov-report=term-missing   # 覆盖率 ≥90%
 ruff check .                             # E,F,I,UP,B,SIM 全规则
 mypy webapp models.py ...                # 类型检查（核心模块）
@@ -140,6 +140,15 @@ CI（`.github/workflows/ci.yml`）：Python 3.11/3.12 矩阵，ruff + mypy + ban
 - `docs/API.md` — API 参考
 - `docs/ARCHITECTURE.md` — 架构与数据流
 - `docs/SECURITY.md` — 安全模型与威胁说明
+
+## 致谢
+
+- 多维度评分框架的灵感来自 [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search)（MIT License）
+
+## 免责声明
+
+- 本工具面向个人求职使用。自动抓取 LinkedIn / Indeed / JobStreet 等平台可能违反其服务条款，请控制抓取频率并自行承担风险。
+- 本项目仅依赖宽松许可证（MIT / BSD / Apache）的开源库。
 
 ## License
 
