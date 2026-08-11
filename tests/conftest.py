@@ -80,8 +80,8 @@ Phone: +6012-345-6789
 Location: Georgetown, Penang, Malaysia
 
 ## Professional Summary
-Data Analyst with 1 year of hands-on experience classifying NLP datasets for Microsoft
-and QA audits for Apple. RPA developer using Power Automate from a 3-month logistics internship.
+Data Analyst with 1 year of hands-on experience classifying NLP datasets for a global tech client
+and QA audits for a hardware vendor. RPA developer using Power Automate from a 3-month logistics internship.
 
 ## Technical Skills
 - Python, C#, Java, SQL
@@ -90,8 +90,8 @@ and QA audits for Apple. RPA developer using Power Automate from a 3-month logis
 - Microsoft Excel, Power BI
 
 ## Experience
-Data Analyst (1 year) at Centific Global Solutions
-Automation Intern at PKT Logistic
+Data Analyst (1 year) at Nexa Analytics Global
+Automation Intern at Vertex Logistics
 
 ## Education
 Diploma of Computer Science

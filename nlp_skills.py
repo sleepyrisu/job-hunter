@@ -213,8 +213,8 @@ if __name__ == "__main__":
     - Docker, Git
 
     # Experience
-    - Data Analyst at Centific (10 months)
-    - RPA Intern at PKT Logistic (3 months)
+    - Data Analyst at Nexa Analytics (10 months)
+    - RPA Intern at Vertex Logistics (3 months)
 
     # Education
     - Diploma in Computer Science

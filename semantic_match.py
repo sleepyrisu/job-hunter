@@ -130,7 +130,7 @@ if __name__ == "__main__":
     resume = """
     Tan Wei Ming
     Skills: Python, Power Automate, RPA, SQL, Data Analysis
-    Experience: Data Analyst at Centific (10 months), RPA Intern at PKT Logistic
+    Experience: Data Analyst at Nexa Analytics (10 months), RPA Intern at Vertex Logistics
     Education: Diploma in Computer Science
     """
 

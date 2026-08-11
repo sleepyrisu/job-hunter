@@ -67,7 +67,7 @@ Score CONTENT ONLY (skills / experience / education / role fit). Location,
 company type and salary are applied ONCE downstream by the preference layer —
 never fold them into this "score". Then compute the weighted final score:
 1. **Technical Skills Match** (40%): Candidate's coding skills (C#, C++, Java, SQL) are at **academic level** — last used actively in diploma (~2023-2024). Needs 2-4 weeks ramp-up for production coding. **Strongest skills are RPA (Power Automate) and data operations (ML QA, classification)** — these are recent, hands-on professional experience. Compare each job requirement against this reality.
-2. **Experience Match** (30%): ~10 months professional experience (Centific data ops + PKT RPA internship). Junior/grad roles (0-2yr) = higher. Pure software engineering roles asking for coding production experience = penalize.
+2. **Experience Match** (30%): ~10 months professional experience (Nexa Analytics data ops + Vertex Logistics RPA internship). Junior/grad roles (0-2yr) = higher. Pure software engineering roles asking for coding production experience = penalize.
 3. **Education Fit** (10%): Diploma holder. Degree-mandatory roles penalized; fresh-graduate-welcome roles boosted.
 4. **Career Alignment & Growth** (20%): Does this role let candidate contribute from day 1 (RPA/data ops) while rebuilding coding skills through mentorship? Ideal = hybrid role where existing skills are primary value and coding is developed.
 

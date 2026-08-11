@@ -178,7 +178,7 @@ if __name__ == "__main__":
     - Docker, Git
 
     Experience
-    Data Analyst at Centific (10 months)
+    Data Analyst at Nexa Analytics (10 months)
     - Developed automated reporting solutions
     - Managed data pipelines using Python
 
